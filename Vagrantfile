@@ -35,6 +35,14 @@ Vagrant::Config.run do |config|
 
     chef.json = JSON.parse(File.open(solo_json, &:read))
 
+    # Development mode
+    development_mode = false
+    if development_mode
+      chef.json['versions'].each do |repo, version|
+        chef.json['versions'][repo] = 'master' unless repo == 'client'
+      end
+    end
+
     # Override solo.json to use vagrant user
     chef.json["user"] = "vagrant"
     chef.json["group"] = "vagrant"
